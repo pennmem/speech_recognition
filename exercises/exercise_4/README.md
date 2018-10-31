@@ -1,0 +1,1 @@
+The point of this exercise is to get you to see what the output of DeepSpeech looks like on a single file. 

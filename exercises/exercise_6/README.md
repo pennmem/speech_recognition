@@ -1,0 +1,1 @@
+Create your own config file for this experiment, then test it to make sure it works by running speech recognition on this experiment.

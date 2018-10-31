@@ -1,0 +1,1 @@
+python kaldi_align.py
