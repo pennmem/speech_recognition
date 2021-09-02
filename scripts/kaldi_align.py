@@ -9,7 +9,6 @@ from utils import Annotation, AnnotationWithOffsets
 
 class KaldiDecoder:
     def __init__(self, transcript_file, no_ext, config_file):
-        self.words = words
         self.no_ext = no_ext
         self.base = os.path.basename(no_ext)
         self.config = configparser.ConfigParser()
@@ -22,7 +21,6 @@ class KaldiDecoder:
         self.dic = self.config['kaldi']['DICFILE']
         self.loc = self.config['kaldi']['KALDI_LOCATION']
         self.word2numdict_path = self.config['directories']['word_to_num_dict']
-        self.wordpool = [x.rstrip('\n') for x in open(wordpool)]
 
         #needs to be in this order
         self.transcript_file = transcript_file
@@ -88,6 +86,12 @@ class KaldiDecoder:
         return self.kaldi_transcription
 
     def _read_transcription(self, kaldi_output, offsets=False):
+        '''
+        Makes the output of Kaldi into an Annotation class or an AnnotationWithOffsets class
+        :param kaldi_output:
+        :param offsets:
+        :return:
+        '''
         kaldi_list = kaldi_output.decode("utf-8").split('\n')
 
         # This removes the first and last words since they're not actual words.
@@ -96,8 +100,8 @@ class KaldiDecoder:
             filtered_kaldi_list = filtered_kaldi_list[1:]
 
         if offsets == True:
-            new_kaldi_output = [AnnotationWithOffsets((x.split(' ')[4], float(x.split(' ')[2]) * 1000,
-                                float(x.split(' ')[2]) * 1000 + float(x.split(' ')[3]) * 1000)) for x in
+            new_kaldi_output = [AnnotationWithOffsets(x.split(' ')[4], float(x.split(' ')[2]) * 1000,
+                                                      float(x.split(' ')[2]) * 1000 + float(x.split(' ')[3]) * 1000) for x in
                                 filtered_kaldi_list]
         else:
             new_kaldi_output = [Annotation(x.split(' ')[4], float(x.split(' ')[2]) * 1000) for x in filtered_kaldi_list]
@@ -112,11 +116,12 @@ class KaldiDecoder:
         except OSError:
             pass
 
-        #Remove .transcript
-        try:
-            os.remove(self.transcript_file)
-        except OSError:
-            pass
+        if self.transcript_file.split('.')[-1] == '.transcript':
+            #Remove .transcript
+            try:
+                os.remove(self.transcript_file)
+            except OSError:
+                pass
 
         #Remove .arpa
         try:
@@ -143,19 +148,14 @@ class KaldiDecoder:
                     word_num = -1
                 af.write('{}\t{}\t{}\n'.format(time, word_num, word))
 
-    def write_oann(self, annotation, dest):
-        word2numdict = pickle.load(open(self.word2numdict_path, 'rb'))
+    @staticmethod
+    def write_oann(annotation, dest):
         with open(dest+'.oann', 'w') as af:
             for pair in annotation:
                 onset = pair.onset
                 word = pair.word
                 offset = pair.offset
-                word_key = word.lower()
-                if word_key in word2numdict:
-                    word_num = word2numdict[word.lower()]
-                else:
-                    word_num = -1
-                af.write('{}\t{}\t{}\n'.format(onset, offset, word_num, word))
+                af.write('{}\t{}\t{}\n'.format(onset, offset, word))
 
 
     def _core_asr(self, wavfile):
@@ -168,15 +168,13 @@ class KaldiDecoder:
         output = subprocess.check_output('{0} {1} {2}'.format(self.ksl, new_base, wavfile),shell=True, stderr=subprocess.STDOUT)
         return output
 
-    def remove_elis(self, words):
-        return [x for x in words if x.upper() in self.wordpool]
-
 
 if __name__ == "__main__":
     wavfile = sys.argv[1]
     lstfile = sys.argv[2]
+    no_ext = lstfile.split('.')[0],
     config = '/home1/maint/speech_recognition_scripts/config.ini'
-    kd = KaldiDecoder(lstfile, no_ext, config_file, exp_config_file)
+    kd = KaldiDecoder(lstfile, no_ext, config)
     kaldi_ann = kd.decode(wavfile)
     kd.write_ann(kaldi_ann, no_ext)
     kd.cleanup()
