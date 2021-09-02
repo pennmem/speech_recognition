@@ -1,1 +1,1 @@
-Create your own config file for this experiment, then run speech recognition on this experiment.
+Run postprocessing on the files in session_0 manually using scripts/post_processing.py.

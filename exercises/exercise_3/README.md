@@ -1,1 +1,1 @@
-Run Kaldi on a single file and write the output to 0.ann
+Generate offsets for the file in session_0 using scripts/offsets_align, write them to 0.oann.
