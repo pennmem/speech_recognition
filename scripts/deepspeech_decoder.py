@@ -97,9 +97,12 @@ class DSDecoder:
 
 
 if __name__ == "__main__":
+    if len(sys.argv) < 3:
+        print('python3', sys.argv[0], 'file.wav', 'file.lst')
+        sys.exit(0)
     wavfile = sys.argv[1]
     lstfile = sys.argv[2]
     # tmpfile = sys.argv[3]
     with open(lstfile) as lstf:
-        words = [x.rstrip('\n').split('') for x in lstf]
-    print(DSDecoder(lstfile, '/home1/maint/automatic_annotation/config/config.ini').decode(wavfile))
+        words = [list(x.rstrip('\n')) for x in lstf]
+    print(DSDecoder(lstfile, lstfile.split('.')[0], '/home1/maint/automatic_annotation/config/config.ini').decode(wavfile))

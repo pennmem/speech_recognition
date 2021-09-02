@@ -8,9 +8,7 @@ from kaldi_align import KaldiDecoder
 
 import configparser
 
-KALDI_DIRECTORY = '/home1/maint/kaldi/egs/aspire/s5/'
-
-def annotate_directory(start_directory, config_file, exp_config_file):
+def create_offsets_directory(start_directory, config_file, exp_config_file):
     '''
     Creates directories called 'files_to_annotate' which contains the files to be annotated and 'chunks' which contains
     wavfiles which are split on silence and no longer need to be annotated.
@@ -24,8 +22,8 @@ def annotate_directory(start_directory, config_file, exp_config_file):
     exp_config.read(exp_config_file)
 
     num_files = int(exp_config['properties']['number_of_files'])
-
-    #MD added wordpool.txt for ltpRepFR 4/30
+    
+    #MD added wordpool.txt for ltpRepFR 
     files = glob.glob(os.path.join(start_directory, '*.wav')) + glob.glob(os.path.join(start_directory, '*.lst')) + glob.glob(os.path.join(start_directory, 'wordpool.txt'))
     good_lists = []
     for x in range(num_files):
@@ -37,21 +35,21 @@ def annotate_directory(start_directory, config_file, exp_config_file):
         lstfile = os.path.join(start_directory, str(item)+'.lst')
         annotate_file(wavfile, lstfile, config_file, exp_config_file)
 
-    #MD edited on 4/28/21 to add ffr annotations for ltpRepFR. Note: every word
-    #from wordpool.txt is used, and no ffr.lst is auto-generated, so use
-    #wordpool.txt as ffr's lst file
+    #MD added on 4/28/21 to account for ffr in ltpRepFR. Note: no ffr.lst
+    #auto-generated for RepFR, and every word in wordpool used, so use
+    #wordpool.txt as lst file
     if os.path.join(start_directory, 'ffr.wav') in files and os.path.join(start_directory, 'wordpool.txt') in files:
-        wavfile = os.path.join(start_directory,'ffr.wav')
-        lstfile = os.path.join(start_directory,'wordpool.txt')
-        annotate_file(wavfile, lstfile, config_file, exp_config_file)
+        wavfile = os.path.join(start_directory, 'ffr.wav')
+        lstfile = os.path.join(start_directory, 'wordpool.txt')
+        annotate_file(wavfile, lstfile, config_file, exp_config_file
 
-def annotate_file(wavfile, lstfile, config_file, exp_config_file):
+def create_offsets_file(wavfile, lstfile, config_file, exp_config_file):
     '''
     This takes in a wavfile and splits it on silence before running a CTC based decoder (DeepSpeech) and then
     a WFST based decoder (Kaldi) on it. For each time '<unk>' is seen, we remove the preceding word and the succeeding
     word (see unk_handler for full description of logic), and make that a file for the annotator to annotate.
 
-    :param wavfile: File containing audio:
+    :param wavfile: File containing audio
     :param lstfile: File containing expected words for list
     :return: Nothing, writes files to directory
     '''

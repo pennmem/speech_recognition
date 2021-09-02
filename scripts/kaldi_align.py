@@ -153,7 +153,7 @@ class KaldiDecoder:
         with open(dest+'.oann', 'w') as af:
             for pair in annotation:
                 onset = pair.onset
-                word = pair.word
+                word = pair.word.upper()
                 offset = pair.offset
                 af.write('{}\t{}\t{}\n'.format(onset, offset, word))
 
@@ -176,7 +176,7 @@ if __name__ == "__main__":
     config = '/home1/maint/speech_recognition_scripts/config.ini'
     kd = KaldiDecoder(lstfile, no_ext, config)
     kaldi_ann = kd.decode(wavfile)
-    kd.write_ann(kaldi_ann, no_ext)
+    # kd.write_ann(kaldi_ann, no_ext)
     kd.cleanup()
 
 

@@ -20,10 +20,6 @@ def main(config_file):
         exp_config = configparser.ConfigParser()
         exp_config.read(exp_config_file)
 
-        root = []
-        log = []
-
-
         try:
             exp_config = dict(exp_config.items('properties'))
             root = exp_config['experiment_root']
@@ -31,7 +27,6 @@ def main(config_file):
             finished_sessions = exp_config['finished_sessions']
         except Exception:
             print("{} is missing some properties, please fix!".format(experiment))
-            raise
 
         rec_mod_sess = find_cont_subdir(root, 'session')
 

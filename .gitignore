@@ -3,4 +3,5 @@
 __pycache__
 exercises/exercise*/jesse
 exercises/exercise*/effie
-exercises/exercise*/rcolyer_
+exercises/exercise*/rcolyer
+*.pyc

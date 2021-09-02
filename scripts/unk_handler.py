@@ -121,7 +121,7 @@ def write_times(unk_ranges, base):
     time_file = base+'.times'
     with open(time_file,'w') as tf:
         for unk_range in unk_ranges:
-            tf.write('{} {} \n'.format(unk_range.start, unk_range.end))
+            tf.write('{} {} \n'.format(int(unk_range.start*1000), int(unk_range.end*1000)))
 
 
 def make_files_to_annotate(annotation, wavfile, files_to_annotate_directory, start_time, end_time):
@@ -136,4 +136,4 @@ def make_files_to_annotate(annotation, wavfile, files_to_annotate_directory, sta
     '''
     unk_ranges = get_unk_ranges(annotation, start_time, end_time)
     batch_slice(wavfile, files_to_annotate_directory, unk_ranges)
-    write_times(unk_ranges, os.path.basename(wavfile))
+    write_times(unk_ranges, os.path.abspath(wavfile).split('.')[0])

@@ -55,7 +55,7 @@ def read_ann(ann_file):
     :return: List of dicts
     '''
     zip_list = zip(words_from_ann(ann_file), times_from_ann(ann_file))
-    ann_list = [{"word": x[0], "time":x[1]} for x in zip_list]
+    ann_list = [Annotation(x[0],x[1]) for x in zip_list]
     return ann_list
 
 def add_ann(annotations, offset):
@@ -89,8 +89,10 @@ def words_from_lst(lstfile):
     return [x.rstrip('\n') for x in open(lstfile)]
 
 def get_subject(filename):
-    return filename.split('/')[6]
+    return filename.split('/')[-2]
+    #return filename.split('/')[6]
 
 def get_session(filename):
-    return filename.split('/')[7].split('_')[-1]
+    return filename.split('/')[-1].split('_')[-1]
+    #return filename.split('/')[7].split('_')[-1]
 
