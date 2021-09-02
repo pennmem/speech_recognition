@@ -1,0 +1,4 @@
+ASR script ran on 2018-11-05 00:00
+The following sessions were found as needing annotation:
+/home1/maint/automatic_annotation/exercises/exercise_8/franco/session_0
+franco session 0 was finished being annotated. 

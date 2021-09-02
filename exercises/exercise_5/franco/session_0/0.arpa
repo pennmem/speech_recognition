@@ -1,0 +1,15 @@
+\data\
+ngram 1=4
+ngram 2=2
+
+\1-grams:
+-0.7781512	<unk>	0
+0	<s>	-0.30103
+-0.38021123	</s>	0
+-0.38021123	SCULPTURE	-0.30103
+
+\2-grams:
+-0.1497623	SCULPTURE </s>
+-0.1497623	<s> SCULPTURE
+
+\end\

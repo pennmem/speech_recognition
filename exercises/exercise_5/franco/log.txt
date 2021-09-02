@@ -1,0 +1,14 @@
+ASR script ran on 2018-11-01 09:12
+The following sessions were found as needing annotation:
+/home1/maint/automatic_annotation/exercises/exercise_5/franco/session_0
+ASR script ran on 2018-11-01 09:14
+The following sessions were found as needing annotation:
+/home1/maint/automatic_annotation/exercises/exercise_5/franco/session_0
+ASR script ran on 2018-11-01 09:14
+The following sessions were found as needing annotation:
+/home1/maint/automatic_annotation/exercises/exercise_5/franco/session_0
+/home1/maint/automatic_annotation/exercises/exercise_5/franco/session_0/0.wav
+SCULPTURE
+franco session 0 was finished being annotated. 
+ASR script ran on 2018-11-01 22:22
+The following sessions were found as needing annotation:
