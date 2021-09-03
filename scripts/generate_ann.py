@@ -73,17 +73,17 @@ def annotate_file(wavfile, lstfile, config_file, exp_config_file, is_ffr=False):
         #Downsampling to 16KHz needed for DeepSpeech
         utils.downsample(wavfile, wavfile, 16000)
 
-        #Create Folders
+        #Create Folders (JP 2021/09/03: Commented out files_to_annotate)
         start_directory = os.path.dirname(wavfile)
         chunks_directory = os.path.join(start_directory, 'chunks/')
-        files_to_annotate_directory = os.path.join(start_directory, 'files_to_annotate/')
+        #files_to_annotate_directory = os.path.join(start_directory, 'files_to_annotate/')
         no_ext = os.path.splitext(wavfile)[0]
 
         if not os.path.exists(chunks_directory):
             os.makedirs(chunks_directory)
 
-        if not os.path.exists(files_to_annotate_directory):
-            os.makedirs(files_to_annotate_directory)
+        #if not os.path.exists(files_to_annotate_directory):
+        #    os.makedirs(files_to_annotate_directory)
 
         #Creates DeepSpeech Model
         ds = DSDecoder(lstfile, no_ext, config_file)
@@ -105,8 +105,8 @@ def annotate_file(wavfile, lstfile, config_file, exp_config_file, is_ffr=False):
                 kd.write_ann(kaldi_ann, no_ext, tmp_mode=True)
                 kd.cleanup()
                 #Runs unknown handler
-                if unk_handler.unk_in(kaldi_ann):
-                    unk_handler.make_files_to_annotate(kaldi_ann, chunk.wavfile, files_to_annotate_directory, chunk.start_time, chunk.end_time)
+                #if unk_handler.unk_in(kaldi_ann):
+                #    unk_handler.make_files_to_annotate(kaldi_ann, chunk.wavfile, files_to_annotate_directory, chunk.start_time, chunk.end_time)
 
 def create_transcript(no_ext, transcription):
     '''
