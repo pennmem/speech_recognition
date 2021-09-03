@@ -40,9 +40,9 @@ def annotate_directory(start_directory, config_file, exp_config_file):
     #MD edited on 4/28/21 to add ffr annotations for ltpRepFR. Note: every word
     #from wordpool.txt is used, and no ffr.lst is auto-generated, so use
     #wordpool.txt as ffr's lst file
-    if os.path.join(start_directory, 'ffr.wav') in files and os.path.join(start_directory, 'wordpool.txt') in files:
+    if os.path.join(start_directory, 'ffr.wav') in files:
         wavfile = os.path.join(start_directory,'ffr.wav')
-        lstfile = os.path.join(start_directory,'wordpool.txt')
+        lstfile = exp_config['properties']['wordpool']
         annotate_file(wavfile, lstfile, config_file, exp_config_file, is_ffr=True)
 
 def annotate_file(wavfile, lstfile, config_file, exp_config_file, is_ffr=False):
