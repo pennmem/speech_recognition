@@ -43,9 +43,9 @@ def annotate_directory(start_directory, config_file, exp_config_file):
     if os.path.join(start_directory, 'ffr.wav') in files and os.path.join(start_directory, 'wordpool.txt') in files:
         wavfile = os.path.join(start_directory,'ffr.wav')
         lstfile = os.path.join(start_directory,'wordpool.txt')
-        annotate_file(wavfile, lstfile, config_file, exp_config_file)
+        annotate_file(wavfile, lstfile, config_file, exp_config_file, is_ffr=True)
 
-def annotate_file(wavfile, lstfile, config_file, exp_config_file):
+def annotate_file(wavfile, lstfile, config_file, exp_config_file, is_ffr=False):
     '''
     This takes in a wavfile and splits it on silence before running a CTC based decoder (DeepSpeech) and then
     a WFST based decoder (Kaldi) on it. For each time '<unk>' is seen, we remove the preceding word and the succeeding
@@ -62,7 +62,7 @@ def annotate_file(wavfile, lstfile, config_file, exp_config_file):
     wordpool = [x.rstrip('\n').upper() for x in open(wordpool_file)]
 
 
-    if exp_config.getboolean('properties','single_word_files'):
+    if exp_config.getboolean('properties','single_word_files') and not is_ffr:
         transcription = [x.strip().rstrip('\n') for x in open(lstfile)]
         no_ext = lstfile.split('.')[0]
 
