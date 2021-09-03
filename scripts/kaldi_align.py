@@ -151,9 +151,7 @@ class KaldiDecoder:
                 af.write('{}\t{}\t{}\n'.format(time, word_num, word))
     
     @staticmethod
-    def write_oann(annotation, dest, tmp_mode=False):
-        # If tmp_mode, force manual review by creating .otmp instead of .oann
-        outfile = dest + '.otmp' if tmp_mode else dest + '.oann'
+    def write_oann(annotation, dest):
         with open(dest+'.oann', 'w') as af:
             for pair in annotation:
                 onset = pair.onset
