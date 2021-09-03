@@ -135,9 +135,11 @@ class KaldiDecoder:
         except OSError:
             pass
 
-    def write_ann(self, annotation, dest):
+    def write_ann(self, annotation, dest, tmp_mode=False):
         word2numdict = pickle.load(open(self.word2numdict_path, 'rb'))
-        with open(dest+'.ann', 'w') as af:
+        # If tmp_mode, force manual review by creating .tmp instead of .ann
+        outfile = dest + '.tmp' if tmp_mode else dest + '.ann'
+        with open(outfile, 'w') as af:
             for pair in annotation:
                 word = pair.word
                 time = pair.time
@@ -147,9 +149,11 @@ class KaldiDecoder:
                 else:
                     word_num = -1
                 af.write('{}\t{}\t{}\n'.format(time, word_num, word))
-
+    
     @staticmethod
-    def write_oann(annotation, dest):
+    def write_oann(annotation, dest, tmp_mode=False):
+        # If tmp_mode, force manual review by creating .otmp instead of .oann
+        outfile = dest + '.otmp' if tmp_mode else dest + '.oann'
         with open(dest+'.oann', 'w') as af:
             for pair in annotation:
                 onset = pair.onset

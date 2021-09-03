@@ -36,7 +36,7 @@ def annotate_directory(start_directory, config_file, exp_config_file):
         wavfile = os.path.join(start_directory,str(item)+'.wav')
         lstfile = os.path.join(start_directory, str(item)+'.lst')
         annotate_file(wavfile, lstfile, config_file, exp_config_file)
-
+3
     #MD edited on 4/28/21 to add ffr annotations for ltpRepFR. Note: every word
     #from wordpool.txt is used, and no ffr.lst is auto-generated, so use
     #wordpool.txt as ffr's lst file
@@ -101,7 +101,8 @@ def annotate_file(wavfile, lstfile, config_file, exp_config_file, is_ffr=False):
                 transcript_file = create_transcript(no_ext, transcription)
                 kd = KaldiDecoder(transcript_file, no_ext, config_file)
                 kaldi_ann = kd.decode(chunk.wavfile)
-                kd.write_ann(kaldi_ann, no_ext)
+                # JP 2021/09/02: Set multiword annotations to create .tmp files instead of .ann's to force manual review
+                kd.write_ann(kaldi_ann, no_ext, tmp_mode=True)
                 kd.cleanup()
                 #Runs unknown handler
                 if unk_handler.unk_in(kaldi_ann):
