@@ -68,7 +68,7 @@ def check_within_times(time_to_check, times):
     return False
 
 
-def combine_chunks(wavfile, target_directory):
+def combine_chunks(wavfile, target_directory, tmp_mode=False):
     '''
     Finds the chunks of a wavfile, then combines them and outputs a sorted Annotation
     :param wavfile:
@@ -77,9 +77,10 @@ def combine_chunks(wavfile, target_directory):
     :return:
     '''
     no_ext = wavfile.split('.')[0]
-    ann_file = no_ext+'.tmp'
+    ext = '.tmp' if tmp_mode else '.ann'
+    ann_file = no_ext + ext
     base_name = os.path.basename(no_ext)
-    time_file = no_ext +'.times'
+    time_file = no_ext + '.times'
     ann = []
     if os.path.exists(time_file):
         times = read_time_file(time_file)
@@ -87,7 +88,7 @@ def combine_chunks(wavfile, target_directory):
             ann = [x for x in utils.read_ann(ann_file) if not check_within_times(x.time, times)]
         for i, time in enumerate(times):
             chunk_ann = []
-            chunk_ann_file = os.path.join(target_directory, base_name+'_'+str(i)+'.tmp')
+            chunk_ann_file = os.path.join(target_directory, base_name+'_'+str(i)+ext)
             if os.path.exists(chunk_ann_file): #MD changed from ann_file 4/28/21
                 chunk_ann = utils.read_ann(chunk_ann_file)
             ann.extend([utils.Annotation(x.word, x.time+float(time.start))
@@ -117,5 +118,5 @@ def combine_main_directory_annotated_files(wavfile, word2numdict, tmp_mode=False
     #for chunk in chunks:
     #    chunk_anns = combine_chunks(chunk, fta_dir)
     #    write_ann(chunk_anns, os.path.splitext(os.path.abspath(chunk))[0], word2numdict, tmp_mode)
-    combined_anns = combine_chunks(wavfile, chunk_dir)
+    combined_anns = combine_chunks(wavfile, chunk_dir, tmp_mode)
     write_ann(combined_anns, os.path.splitext(os.path.abspath(wavfile))[0], word2numdict, tmp_mode)
