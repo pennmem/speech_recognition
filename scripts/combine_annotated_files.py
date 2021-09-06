@@ -106,16 +106,16 @@ def combine_main_directory_annotated_files(wavfile, word2numdict, tmp_mode=False
     :return:
     '''
     wavfile = os.path.abspath(wavfile)
-    base_name = os.path.splitext(os.path.basename(wavfile))[0]
+    #base_name = os.path.splitext(os.path.basename(wavfile))[0]
     dir_path = os.path.dirname(wavfile)
     chunk_dir = os.path.join(dir_path, 'chunks/')
-    fta_dir = os.path.join(dir_path, 'files_to_annotate/')
-    time_file = os.path.splitext(wavfile)[0]+'.times'
-    if os.path.exists(time_file):
-        times = read_time_file(time_file)
-    chunks = [os.path.join(chunk_dir, base_name+'_'+str(x)+'.wav') for x in range(len(times))]
-    for chunk in chunks:
-        chunk_anns = combine_chunks(chunk, fta_dir)
-        write_ann(chunk_anns, os.path.splitext(os.path.abspath(chunk))[0], word2numdict, tmp_mode)
+    #fta_dir = os.path.join(dir_path, 'files_to_annotate/')
+    #time_file = os.path.splitext(wavfile)[0]+'.times'
+    #if os.path.exists(time_file):
+    #    times = read_time_file(time_file)
+    #chunks = [os.path.join(chunk_dir, base_name+'_'+str(x)+'.wav') for x in range(len(times))]
+    #for chunk in chunks:
+    #    chunk_anns = combine_chunks(chunk, fta_dir)
+    #    write_ann(chunk_anns, os.path.splitext(os.path.abspath(chunk))[0], word2numdict, tmp_mode)
     combined_anns = combine_chunks(wavfile, chunk_dir)
     write_ann(combined_anns, os.path.splitext(os.path.abspath(wavfile))[0], word2numdict, tmp_mode)
