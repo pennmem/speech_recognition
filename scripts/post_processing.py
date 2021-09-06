@@ -25,7 +25,7 @@ def post_process_directory(start_directory, config_file, exp_config_file):
     for f in files:
         post_process_file(f, config_file, exp_config_file)
 
-def post_process_file(wavfile, config_file, exp_config_file):
+def post_process_file(wavfile, config_file, exp_config_file, tmp_mode=False):
     '''
     This takes in a wavfile and depending on whether or not it is a
     :param wavfile: File containing audio
@@ -42,11 +42,11 @@ def post_process_file(wavfile, config_file, exp_config_file):
 
     base_name = wavfile.split('.')[0]
     lstfile = base_name + '.lst'
-    annfile = base_name + '.ann'
+    annfile = base_name + '.tmp' if tmp_mode else base_name + '.ann'
 
     if exp_config.getboolean('properties','single_word_files'):
         offsets_align.create_offsets(wavfile, lstfile, annfile, config_file)
     else:
-        combine_annotated_files.combine_main_directory_annotated_files(wavfile, word2numdict)
+        combine_annotated_files.combine_main_directory_annotated_files(wavfile, word2numdict, tmp_mode)
         offsets_align.create_offsets(wavfile, lstfile, annfile, config_file)
 

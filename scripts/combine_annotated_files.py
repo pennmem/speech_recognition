@@ -32,9 +32,10 @@ def check_is_empty(annfile):
         return True
     return False
 
-def write_ann(annotation, dest, word2numdict_path):
+def write_ann(annotation, dest, word2numdict_path, tmp_mode=False):
     word2numdict = pickle.load(open(word2numdict_path, 'rb'))
-    with open(dest+'.ann', 'w') as af:
+    outfile = dest + '.tmp' if tmp_mode else dest + '.ann'
+    with open(outfile, 'w') as af:
         for pair in annotation:
             word = pair.word
             word = word.upper()
@@ -76,7 +77,7 @@ def combine_chunks(wavfile, target_directory):
     :return:
     '''
     no_ext = wavfile.split('.')[0]
-    ann_file = no_ext+'.ann'
+    ann_file = no_ext+'.tmp'
     base_name = os.path.basename(no_ext)
     time_file = no_ext +'.times'
     ann = []
@@ -86,7 +87,7 @@ def combine_chunks(wavfile, target_directory):
             ann = [x for x in utils.read_ann(ann_file) if not check_within_times(x.time, times)]
         for i, time in enumerate(times):
             chunk_ann = []
-            chunk_ann_file = os.path.join(target_directory, base_name+'_'+str(i)+'.ann')
+            chunk_ann_file = os.path.join(target_directory, base_name+'_'+str(i)+'.tmp')
             if os.path.exists(chunk_ann_file): #MD changed from ann_file 4/28/21
                 chunk_ann = utils.read_ann(chunk_ann_file)
             ann.extend([utils.Annotation(x.word, x.time+float(time.start))
@@ -97,9 +98,9 @@ def combine_chunks(wavfile, target_directory):
         ann = []
     return ann
 
-def combine_main_directory_annotated_files(wavfile, word2numdict):
+def combine_main_directory_annotated_files(wavfile, word2numdict, tmp_mode=False):
     '''
-    Finds the chunks of a wavfile in the main directory, combines them, then writes .ann files
+    Finds the chunks of a wavfile in the main directory, combines them, then writes .tmp files
     :param wavfile:
     :param word2numdict:
     :return:
@@ -115,6 +116,6 @@ def combine_main_directory_annotated_files(wavfile, word2numdict):
     chunks = [os.path.join(chunk_dir, base_name+'_'+str(x)+'.wav') for x in range(len(times))]
     for chunk in chunks:
         chunk_anns = combine_chunks(chunk, fta_dir)
-        write_ann(chunk_anns, os.path.splitext(os.path.abspath(chunk))[0], word2numdict)
+        write_ann(chunk_anns, os.path.splitext(os.path.abspath(chunk))[0], word2numdict, tmp_mode)
     combined_anns = combine_chunks(wavfile, chunk_dir)
-    write_ann(combined_anns, os.path.splitext(os.path.abspath(wavfile))[0], word2numdict)
+    write_ann(combined_anns, os.path.splitext(os.path.abspath(wavfile))[0], word2numdict, tmp_mode)
