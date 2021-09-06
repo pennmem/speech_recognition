@@ -72,8 +72,8 @@ def combine_chunks(wavfile, target_directory, tmp_mode=False):
     '''
     Finds the chunks of a wavfile, then combines them and outputs a sorted Annotation
     :param wavfile:
-    :param current_directory:
     :param target_directory:
+    :param tmp_mode:
     :return:
     '''
     no_ext = wavfile.split('.')[0]
@@ -101,9 +101,10 @@ def combine_chunks(wavfile, target_directory, tmp_mode=False):
 
 def combine_main_directory_annotated_files(wavfile, word2numdict, tmp_mode=False):
     '''
-    Finds the chunks of a wavfile in the main directory, combines them, then writes .tmp files
+    Finds the chunks of a wavfile in the main directory, combines them, then writes .tmp/.ann files
     :param wavfile:
     :param word2numdict:
+    :param tmp_mode:
     :return:
     '''
     wavfile = os.path.abspath(wavfile)
