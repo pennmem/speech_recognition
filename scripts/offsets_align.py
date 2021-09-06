@@ -1,10 +1,7 @@
 import os
-import pickle
-import configparser
 import numpy as np
 from kaldi_align import KaldiDecoder
 import utils
-import sys
 #generate transcripts
 
 def find_offset_match(annotations, offset_annotations):
