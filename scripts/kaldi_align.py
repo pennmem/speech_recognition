@@ -167,7 +167,7 @@ class KaldiDecoder:
         new_base = os.path.join(self.loc, self.base)
 
         #we want to get the output but it returns a lot of logs
-        output = subprocess.check_output('{0} {1} {2}'.format(self.ksl, new_base, wavfile),shell=True, stderr=subprocess.STDOUT)
+        output = subprocess.check_output('{0} {1} {2}'.format(self.ksl, new_base, wavfile), shell=True, stderr=subprocess.STDOUT)
         return output
 
 
