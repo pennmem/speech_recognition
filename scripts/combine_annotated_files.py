@@ -18,7 +18,7 @@ def check_all_exist(directory):
     wavfiles = glob.glob(directory+'*.wav')
     annfiles = glob.glob(directory+'*.ann')
     wavfile_noext = set([os.splitext(f)[0] for f in wavfiles])
-    annfiles_noext = set([os.splitext(f)[0] for f in wavfiles])
+    annfiles_noext = set([os.splitext(f)[0] for f in annfiles])
     if wavfile_noext == annfiles_noext:
         return True
     return False
