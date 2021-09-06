@@ -93,6 +93,7 @@ def main(config_file):
                             fd.write(sess + ' did not have all its files annotated, skipped. \n')
                 else:
                     if check_all_annotated_files_to_annotate(sess):
+                        post_process_directory(sess, config_file, exp_config_file)
                         with open(post_processed_sessions,'a') as fd:
                             fd.write(sess + '\n')
                         with open(log, 'a') as l:
