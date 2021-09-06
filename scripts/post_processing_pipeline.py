@@ -79,30 +79,17 @@ def main(config_file):
                     l.write('{}\n'.format(sess))
 
             for sess in sessions_to_annotate:
-                if single_word_mode:
-                    if check_all_annotated_main_directory(sess, exp_config['number_of_files']):
-                        post_process_directory(sess, config_file, exp_config_file)
-                        with open(post_processed_sessions,'a') as fd:
-                            fd.write(sess + '\n')
-                        with open(log, 'a') as l:
-                            l.write('{} session {} was finished being post-processed. \n'
-                            .format(utils.get_subject(sess),
-                                    utils.get_session(sess)))
-                    else:
-                        with open(log,'a') as fd:
-                            fd.write(sess + ' did not have all its files annotated, skipped. \n')
+                if check_all_annotated_main_directory(sess, exp_config['number_of_files']):
+                    post_process_directory(sess, config_file, exp_config_file)
+                    with open(post_processed_sessions,'a') as fd:
+                        fd.write(sess + '\n')
+                    with open(log, 'a') as l:
+                        l.write('{} session {} was finished being post-processed. \n'
+                        .format(utils.get_subject(sess),
+                                utils.get_session(sess)))
                 else:
-                    if check_all_annotated_files_to_annotate(sess):
-                        post_process_directory(sess, config_file, exp_config_file)
-                        with open(post_processed_sessions,'a') as fd:
-                            fd.write(sess + '\n')
-                        with open(log, 'a') as l:
-                            l.write('{} session {} was finished being post-processed. \n'
-                            .format(utils.get_subject(sess),
-                                    utils.get_session(sess)))
-                    else:
-                        with open(log,'a') as fd:
-                            fd.write(sess + ' did not have all its files annotated, skipped. \n')
+                    with open(log,'a') as fd:
+                        fd.write(sess + ' did not have all its files annotated, skipped. \n')
 
 if __name__ == '__main__':
     configfile = sys.argv[1]
