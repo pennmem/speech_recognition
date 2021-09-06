@@ -2,7 +2,7 @@
 import sys
 import os
 import glob
-import utils, unk_handler, split_on_silence, single_word_annotate
+import utils, unk_handler, split_on_silence, single_word_annotate, combine_annotated_files
 from deepspeech_decoder import DSDecoder
 from kaldi_align import KaldiDecoder
 
@@ -55,6 +55,11 @@ def annotate_file(wavfile, lstfile, config_file, exp_config_file, is_ffr=False):
     :param lstfile: File containing expected words for list
     :return: Nothing, writes files to directory
     '''
+    # JP 2021/09/06: I think the word2numdict should probably be moved to the 
+    # exp_config_file so we can simultaneously run experiments with different wordpools
+    config = configparser.ConfigParser()
+    config.read(config_file)
+    word2numdict = config['directories']['word_to_num_dict']
 
     exp_config = configparser.ConfigParser()
     exp_config.read(exp_config_file)
@@ -108,6 +113,9 @@ def annotate_file(wavfile, lstfile, config_file, exp_config_file, is_ffr=False):
                 #if unk_handler.unk_in(kaldi_ann):
                 #    unk_handler.make_files_to_annotate(kaldi_ann, chunk.wavfile, files_to_annotate_directory, chunk.start_time, chunk.end_time)
 
+        # Combine chunks back into a single .tmp file in the main session directory
+        combine_annotated_files.combine_main_directory_annotated_files(wavfile, word2numdict, tmp_mode=True)
+        
 def create_transcript(no_ext, transcription):
     '''
     Creates a .transcript file that contains all the words in words, separated by a newline. This needs to happen

@@ -47,6 +47,6 @@ def post_process_file(wavfile, config_file, exp_config_file, tmp_mode=False):
     if exp_config.getboolean('properties','single_word_files'):
         offsets_align.create_offsets(wavfile, lstfile, annfile, config_file)
     else:
-        combine_annotated_files.combine_main_directory_annotated_files(wavfile, word2numdict, tmp_mode)
+        # combine_annotated_files.combine_main_directory_annotated_files(wavfile, word2numdict, tmp_mode)
         offsets_align.create_offsets(wavfile, lstfile, annfile, config_file)
 
