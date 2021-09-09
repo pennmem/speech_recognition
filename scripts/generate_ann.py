@@ -24,6 +24,12 @@ def annotate_directory(start_directory, config_file, exp_config_file):
     exp_config.read(exp_config_file)
 
     num_files = int(exp_config['properties']['number_of_files'])
+    #JR: added configuration for FFR on 9/9/2021
+    try:
+        check_for_ffr = bool(exp_config['properties']['check_for_ffr'])
+        ffr_naming = str(exp_config['properties']['ffr_naming'])
+    except:
+        print("no ffr configuration")
 
     #MD added wordpool.txt for ltpRepFR 4/30
     files = glob.glob(os.path.join(start_directory, '*.wav')) + glob.glob(os.path.join(start_directory, '*.lst')) + glob.glob(os.path.join(start_directory, 'wordpool.txt'))
@@ -40,10 +46,12 @@ def annotate_directory(start_directory, config_file, exp_config_file):
     #MD edited on 4/28/21 to add ffr annotations for ltpRepFR. Note: every word
     #from wordpool.txt is used, and no ffr.lst is auto-generated, so use
     #wordpool.txt as ffr's lst file
-    if os.path.join(start_directory, 'ffr.wav') in files:
-        wavfile = os.path.join(start_directory,'ffr.wav')
-        lstfile = exp_config['properties']['wordpool']
-        annotate_file(wavfile, lstfile, config_file, exp_config_file, is_ffr=True)
+    #JR edited on 9/9/2021 to use configuration parameters for ffr.
+    if check_for_ffr:
+        # want to accomodate many file types.
+        wavfiles = glob.glob(os.path.join(start_directory, ffr_naming))
+        for f in wavfiles:
+            annotate_file(f, None, config_file, exp_config_file, is_ffr=True)
 
 def annotate_file(wavfile, lstfile, config_file, exp_config_file, is_ffr=False):
     '''
