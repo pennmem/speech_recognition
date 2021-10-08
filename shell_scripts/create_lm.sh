@@ -1,3 +1,4 @@
+echo "Running create_lm.sh"
 cd ~/kaldi/egs/aspire/s5
 mkdir $1
 mkdir $1/local
@@ -13,6 +14,8 @@ cp data/local/dict/optional_silence.txt $1/local/dict/
 cp data/local/dict/silence_phones.txt $1/local/dict/
 cp $2 $1/local/dict/lexicon.txt
 cp $3 $1/local/lang/lm.arpa
+echo "Directory structure created"
+echo $1
 ./cmd.sh 
 ./path.sh 
 model=exp/tdnn_7b_chain_online 
@@ -24,12 +27,18 @@ dict=$1/dict
 dict_tmp=$1/dict_tmp 
 graph=$1/graph 
 
+echo "DEFINITIONS SUCCESSFUL"
+
 # Compile the word lexicon (L.fst)
 utils/prepare_lang.sh --phone-symbol-table $phones_src $dict_src "<unk>" $dict_tmp $dict
+
+echo "prepare_lang.sh SUCCESSFUL"
 
 # Compile the grammar/language model (G.fst)
 gzip <$lm_src> $lm_src.gz
 utils/format_lm.sh $dict $lm_src.gz $dict_src/lexicon.txt $lang
+
+echo "format_lm.sh SUCCESSFUL"
 
 # Finally assemble the HCLG graph
 utils/mkgraph.sh --self-loop-scale 1.0 $lang $model $graph 

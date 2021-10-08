@@ -33,10 +33,12 @@ class KaldiDecoder:
         '''
         Creates language model for Kaldi and corresponding HCLG graph, see Kaldi documentation for more details.
         '''
+        print("Setting up language model")
+        print(os.devnull)
         devnull = open(os.devnull, 'w')
         subprocess.call('{0} {1} {2} {3}'.format(self.klm, self.base, self.dic, self.arpa),
-                        stdout=devnull,
-                        stderr=devnull,
+                        #stdout=subprocess.PIPE,
+                        #stderr=subprocess.PIPE,
                         shell=True)
         return os.path.join(self.loc,self.base)
 
@@ -83,6 +85,7 @@ class KaldiDecoder:
         assert os.path.exists(wavfile_8k)
         raw_output = self._core_asr(wavfile_8k)
         self.kaldi_transcription = self._read_transcription(raw_output, offsets)
+        print("Word transcribed: ", self.kaldi_transcription)
         return self.kaldi_transcription
 
     def _read_transcription(self, kaldi_output, offsets=False):
@@ -145,7 +148,7 @@ class KaldiDecoder:
                 time = pair.time
                 word_key = word.lower()
                 if word_key in word2numdict:
-                    word_num = word2numdict[word.lower()]
+                    word_num = word2numdict[word_key]
                 else:
                     word_num = -1
                 af.write('{}\t{}\t{}\n'.format(time, word_num, word))

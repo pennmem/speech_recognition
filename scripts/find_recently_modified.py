@@ -12,7 +12,7 @@ def walklevel(some_dir, level=3):
         if num_sep + level <= num_sep_this:
             del dirs[:]
 
-def find_cont_subdir(parent_directory, child_string, days_back = 72):
+def find_cont_subdir(parent_directory, child_string, days_back = 14):
     '''
     Looks in parent directory for recently modified subdirectories which contain child_string
     '''

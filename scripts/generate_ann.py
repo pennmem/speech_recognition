@@ -51,6 +51,7 @@ def annotate_directory(start_directory, config_file, exp_config_file):
         # want to accomodate many file types.
         wavfiles = glob.glob(os.path.join(start_directory, ffr_naming))
         for f in wavfiles:
+            print("annotating ffr file: ", f)
             annotate_file(f, None, config_file, exp_config_file, is_ffr=True)
 
 def annotate_file(wavfile, lstfile, config_file, exp_config_file, is_ffr=False):
