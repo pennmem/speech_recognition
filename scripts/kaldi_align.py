@@ -36,7 +36,7 @@ class KaldiDecoder:
         print("Setting up language model")
         print(os.devnull)
         devnull = open(os.devnull, 'w')
-        subprocess.call('{0} {1} {2} {3}'.format(self.klm, self.base, self.dic, self.arpa),
+        subprocess.call("'{}' '{}' '{}' '{}'".format(self.klm, self.base, self.dic, self.arpa),
                         #stdout=subprocess.PIPE,
                         #stderr=subprocess.PIPE,
                         shell=True)
@@ -47,8 +47,7 @@ class KaldiDecoder:
         Creates an arpa file based off of the transcript, uses kenlm.
         '''
         devnull = open(os.devnull, 'w')
-        subprocess.call('{} -o 2 -S 1G -T {}.tmp --discount_fallback < {} > {}.arpa'
-                        .format(self.kenlm, self.no_ext, self.transcript_file, self.no_ext),
+        subprocess.call("'{}' -o 2 -S 1G -T '{}.tmp' --discount_fallback < '{}' > '{}.arpa'".format(self.kenlm, self.no_ext, self.transcript_file, self.no_ext),
                         stdout=devnull, stderr=devnull,
                         shell=True)
 
@@ -77,11 +76,15 @@ class KaldiDecoder:
         base = os.path.basename(wavfile)
         self.no_ext = os.path.splitext(wavfile)[0]
         base_no_ext = os.path.splitext(base)[0]
+        
+        print(wavfile)
+        print(base)
+        print(self.no_ext)
 
         wavfile_8k = os.path.join(downsampled_8k_directory, base)
         utils.downsample(wavfile, wavfile_8k, 8000)
         self.wavfile_8k = wavfile_8k
-
+        print(wavfile_8k)
         assert os.path.exists(wavfile_8k)
         raw_output = self._core_asr(wavfile_8k)
         self.kaldi_transcription = self._read_transcription(raw_output, offsets)
@@ -170,7 +173,7 @@ class KaldiDecoder:
         new_base = os.path.join(self.loc, self.base)
 
         #we want to get the output but it returns a lot of logs
-        output = subprocess.check_output('{0} {1} {2}'.format(self.ksl, new_base, wavfile), shell=True, stderr=subprocess.STDOUT)
+        output = subprocess.check_output("'{0}' '{1}' '{2}'".format(self.ksl, new_base, wavfile), shell=True, stderr=subprocess.STDOUT)
         return output
 
 

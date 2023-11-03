@@ -79,10 +79,10 @@ def downsample(src, dest, rate):
     # file, otherwise a (silent) error happens.
     if src == dest:
         tmp_file = '{}_tmp.wav'.format(os.path.splitext(src)[0])
-        subprocess.call('/home1/maint/ffmpeg-3.4.2-64bit-static/ffmpeg -y -i {} -ar {} {}'.format(src, rate, tmp_file), shell=True, stderr=subprocess.STDOUT)
-        subprocess.call('mv {} {}'.format(tmp_file, dest), shell=True, stderr=subprocess.STDOUT)
+        subprocess.call("/home1/maint/ffmpeg-3.4.2-64bit-static/ffmpeg -y -i '{}' -ar '{}' '{}'".format(src, rate, tmp_file), shell=True, stderr=subprocess.STDOUT)
+        subprocess.call("mv '{}' '{}'".format(tmp_file, dest), shell=True, stderr=subprocess.STDOUT)
     else:
-        subprocess.call('/home1/maint/ffmpeg-3.4.2-64bit-static/ffmpeg -y -i {} -ar {} {}'.format(src, rate, dest),shell=True, stderr=subprocess.STDOUT)
+        subprocess.call("/home1/maint/ffmpeg-3.4.2-64bit-static/ffmpeg -y -i '{}' -ar '{}' '{}'".format(src, rate, dest),shell=True, stderr=subprocess.STDOUT)
     return
 
 def words_from_lst(lstfile):

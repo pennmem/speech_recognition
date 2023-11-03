@@ -60,21 +60,21 @@ class DSDecoder:
         lstfile = self.lstfile + '.tmp'
 
         #run kenlm
-        subprocess.call('{} -o 2 -S 1G -T {}.tmp --discount_fallback < {} > {}.arpa'
+        subprocess.call("{} -o 2 -S 1G -T '{}.tmp' --discount_fallback < '{}' >'{}.arpa'"
                         .format(self.kenlm, self.no_ext, bigram_lst, self.no_ext),
-                        stdout=devnull,
-                        stderr=devnull,
+                        #stdout=devnull,
+                        #stderr=devnull,
                         shell=True)
 
         # makes binary out of arpa file
-        subprocess.call('{} {}.arpa {}.bin'.format(self.binary, self.no_ext, self.no_ext),
+        subprocess.call("'{}' '{}.arpa' '{}.bin'".format(self.binary, self.no_ext, self.no_ext),
                         # stdout=devnull,
                         # stderr = devnull,
                         shell=True)
 
         # creates trie for deepspeech
         subprocess.call(
-            '{} {} {} {} {}'.format(self.trie, self.alphabet, self.no_ext + '.bin', lstfile, self.no_ext + '.trie'),
+            "'{}' '{}' '{}' '{}' '{}'".format(self.trie, self.alphabet, self.no_ext + '.bin', lstfile, self.no_ext + '.trie'),
             # stdout=devnull,
             # stderr = devnull,
             shell=True)

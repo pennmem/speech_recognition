@@ -20,21 +20,43 @@ def annotate_directory(start_directory, config_file, exp_config_file):
 
     #Why do we do this instead of finding all wavfiles? Because it allows us to control which wavfiles are annotated,
     #which is useful for practice lists / ffr.
-    exp_config = configparser.ConfigParser()
+    exp_config = configparser.ConfigParser(allow_no_value=True)
     exp_config.read(exp_config_file)
-
-    num_files = int(exp_config['properties']['number_of_files'])
+    
+    num_files = int(exp_config['properties']['number_of_files']) if \
+        exp_config['properties']['number_of_files'] else None
     #JR: added configuration for FFR on 9/9/2021
     try:
-        check_for_ffr = bool(exp_config['properties']['check_for_ffr'])
+        check_for_ffr = eval(exp_config['properties']['check_for_ffr'])
+        print(check_for_ffr)
         ffr_naming = str(exp_config['properties']['ffr_naming'])
+        if (ffr_naming.startswith("'"))|(ffr_naming.startswith('"')):
+            ffr_naming = ffr_naming[1:-1]
+        print(ffr_naming)
     except:
         print("no ffr configuration")
+    #MD edited on 4/28/21 to add ffr annotations for ltpRepFR. Note: every word
+    #from wordpool.txt is used, and no ffr.lst is auto-generated, so use
+    #wordpool.txt as ffr's lst file
+    #JR edited on 9/9/2021 to use configuration parameters for ffr.
+
+    if check_for_ffr:
+        # want to accomodate many file types.
+        print(os.path.join(start_directory, ffr_naming))
+        wavfiles = glob.glob(os.path.join(start_directory, ffr_naming))
+        print("ffr files:", wavfiles)
+        for f in wavfiles:
+            print("annotating ffr file: ", f)
+            annotate_file(f, None, config_file, exp_config_file, is_ffr=True)
 
     #MD added wordpool.txt for ltpRepFR 4/30
     files = glob.glob(os.path.join(start_directory, '*.wav')) + glob.glob(os.path.join(start_directory, '*.lst')) + glob.glob(os.path.join(start_directory, 'wordpool.txt'))
+    
+    #JR 10/14/21: we want to be able to process arbitrary wav files
+    all_lst_files = [os.path.splitext(os.path.basename(f))[0] for f in glob.glob(os.path.join(start_directory, '*.lst'))]
+    
     good_lists = []
-    for x in range(num_files):
+    for x in (range(num_files) if num_files is not None else all_lst_files):
         if os.path.join(start_directory, str(x)+'.wav') in files and os.path.join(start_directory, str(x)+'.lst') in files:
             good_lists.append(x)
 
@@ -43,16 +65,6 @@ def annotate_directory(start_directory, config_file, exp_config_file):
         lstfile = os.path.join(start_directory, str(item)+'.lst')
         annotate_file(wavfile, lstfile, config_file, exp_config_file)
 
-    #MD edited on 4/28/21 to add ffr annotations for ltpRepFR. Note: every word
-    #from wordpool.txt is used, and no ffr.lst is auto-generated, so use
-    #wordpool.txt as ffr's lst file
-    #JR edited on 9/9/2021 to use configuration parameters for ffr.
-    if check_for_ffr:
-        # want to accomodate many file types.
-        wavfiles = glob.glob(os.path.join(start_directory, ffr_naming))
-        for f in wavfiles:
-            print("annotating ffr file: ", f)
-            annotate_file(f, None, config_file, exp_config_file, is_ffr=True)
 
 def annotate_file(wavfile, lstfile, config_file, exp_config_file, is_ffr=False):
     '''
@@ -66,17 +78,23 @@ def annotate_file(wavfile, lstfile, config_file, exp_config_file, is_ffr=False):
     '''
     # JP 2021/09/06: I think the word2numdict should probably be moved to the 
     # exp_config_file so we can simultaneously run experiments with different wordpools
-    config = configparser.ConfigParser()
+    config = configparser.ConfigParser(allow_no_value=True)
     config.read(config_file)
     word2numdict = config['directories']['word_to_num_dict']
 
-    exp_config = configparser.ConfigParser()
+    exp_config = configparser.ConfigParser(allow_no_value=True)
     exp_config.read(exp_config_file)
     wordpool_file = exp_config['properties']['wordpool']
     wordpool = [x.rstrip('\n').upper() for x in open(wordpool_file)]
+    
+    if is_ffr:
+        lstfile = wordpool_file
 
-
-    if exp_config.getboolean('properties','single_word_files') and not is_ffr:
+    lst_count = len(open(lstfile).readlines())
+    
+    # if exp_config.getboolean('properties','single_word_files') and not is_ffr:
+    if  lst_count==1:
+        print("Single word annotation")
         transcription = [x.strip().rstrip('\n') for x in open(lstfile)]
         no_ext = lstfile.split('.')[0]
 
@@ -85,6 +103,7 @@ def annotate_file(wavfile, lstfile, config_file, exp_config_file, is_ffr=False):
 
     else:
         #Downsampling to 16KHz needed for DeepSpeech
+        print("Downsampling audio file")
         utils.downsample(wavfile, wavfile, 16000)
 
         #Create Folders (JP 2021/09/03: Commented out files_to_annotate)

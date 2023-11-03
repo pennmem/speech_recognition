@@ -5,7 +5,7 @@ import configparser
 
 def annotate(wavfile, lstfile, config_file, exp_config_file):
 
-    exp_config = configparser.ConfigParser()
+    exp_config = configparser.ConfigParser(allow_no_value=True)
     exp_config.read(exp_config_file)
     root = []
     log = []
@@ -36,7 +36,7 @@ def annotate(wavfile, lstfile, config_file, exp_config_file):
 if __name__ == "__main__":
     wavfile = sys.argv[1]
     lstfile = sys.argv[2]
-    config = configparser.ConfigParser()
+    config = configparser.ConfigParser(allow_no_value=True)
     config.read('/home1/maint/speech_recognition_scripts/config.ini')
     annotate(wavfile,lstfile,config)
 

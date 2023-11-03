@@ -17,7 +17,7 @@ def main(config_file):
 
     for experiment in experiments:
         exp_config_file = experiment[1]
-        exp_config = configparser.ConfigParser()
+        exp_config = configparser.ConfigParser(allow_no_value=True)
         exp_config.read(exp_config_file)
 
         root = []
